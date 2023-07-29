@@ -27,7 +27,7 @@ router.get("/", function (req, res) {
 });
 
 app.use((req, res, next) => {
-    res.status(404).render(__dirname + "/views/error.ejs",{ error_status: '404', error_res: "You've got lost! This page does not exist." });
+    res.status(404).render(__dirname + "/views/error.ejs",{ error_status: '404', error_res: "You've gotten lost! This page does not exist." });
 });
 
 app.listen(8080);
