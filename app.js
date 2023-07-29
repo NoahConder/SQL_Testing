@@ -25,7 +25,26 @@ router.get("/", function (req, res) {
   res.render(__dirname + "/views/index.ejs");
 
 });
+// TODO: Implement the Database solution. Should be SQL/SQLite.
+router.get("/sql", function (req, res) {
+    res.render(__dirname + "/views/sql.ejs");
 
+});
+/*
+TODO: Implement API request for pulling call logs from SW API. Ideally I want to pull the following data:
+TODO: Price, Status, Callee, Called, Date & Time
+*/
+router.get("/phone_logger", function (req, res) {
+    res.render(__dirname + "/views/phone_logger.ejs");
+
+});
+// TODO: Implement API Request for weather data. Start with US and expand to global countries eventually.
+router.get("/weather_lookup", function (req, res) {
+    res.render(__dirname + "/views/weather_lookup.ejs");
+
+});
+
+// TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
 app.use((req, res, next) => {
     res.status(404).render(__dirname + "/views/error.ejs",{ error_status: '404', error_res: "You've gotten lost! This page does not exist." });
 });
