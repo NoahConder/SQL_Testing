@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const axios = require('axios').default;
-
+require('dotenv').config()
 const app = express();
 
 // view engine setup
@@ -20,6 +20,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const router = express.Router();
 
+let google_key = process.env.GOOGLE_MAPS
+let weather_key = process.env.OPENWEATHER_API
+
+console.log(weather_key)
 app.use('/', router);
 
 router.get("/", function (req, res) {
@@ -45,12 +49,24 @@ router.get("/weather_lookup", function (req, res) {
 
 });
 router.post("/weather_handle", function (req, res) {
-    const latitude = req.body.latitude;
-    const longitude = req.body.longitude;
-    console.log(longitude)
-    console.log(latitude)
+    const lat = req.body.latitude;
+    const lon = req.body.longitude;
+    console.log(lat)
+    console.log(lon)
+    /* if (lat != null) {
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}`;
 
-
+        axios.get(url)
+            .then(response => {
+                // Handle the API response data here
+                console.log(response.data);
+                res.render((__dirname + "/views/returned_weather"))
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the API call
+                console.error(error);
+      });
+    }     */
 });
 // TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
 // Catch-all route for handling 404 errors
