@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -45,14 +44,32 @@ router.get("/weather_lookup", function (req, res) {
     res.render(__dirname + "/views/weather_lookup.ejs");
 
 });
-router.get("/weather_handle", function (req, res) {
+router.post("/weather_handle", function (req, res) {
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    console.log(longitude)
+    console.log(latitude)
+
 
 });
 // TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
+// Catch-all route for handling 404 errors
 app.use((req, res, next) => {
-    res.status(404).render(__dirname + "/views/error.ejs",{ error_status: '404', error_res: "You've gotten lost! This page does not exist." });
+    res.status(404).render(__dirname + "/views/error.ejs", {
+        error_status: '404',
+        error_res: "You've gotten lost! This page does not exist."
+    });
 });
 
-app.listen(8080);
+// Error handling middleware for handling 500 errors
+app.use((err, req, res, next) => {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).render(__dirname + "/views/error.ejs", {
+        error_status: '500',
+        error_res: "Something went wrong. Please try again later."
+    });
+});
 
-console.log("http://localhost:8080");
+app.listen(8080, host="0.0.0.0");
+
+console.log("http://127.0.0.1:8080");

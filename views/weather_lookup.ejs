@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Noah's Testing Realm</title>
+    <title>Weather Lookup Tool</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
@@ -39,7 +39,7 @@
 <div class="jumbotron jumbotron-fluid bg-body-tertiary">
 
     <div class="container text-center py-5">
-        <h1 class="display-4">Introduction</h1>
+        <h1 class="display-4">Weather</h1>
         <p class="lead col-lg-8 mx-auto">
             This takes the basic jumbotron above and makes its background edge-to-edge with a <code>.container</code> inside to align content. Similar to above, it's been recreated with built-in grid and utility classes.
         </p>
@@ -48,6 +48,16 @@
 
 <!-- Main Content -->
 <main class="container">
+
+    <div class="mb-3">
+        <form id="location_form" action="/weather_handle" method="post">
+        <label for="formGroupExampleInput" class="form-label">Location</label>
+        <input type="text" class="form-control" id="location_input_box" placeholder="Enter your city or zipcode">
+        </form>
+    </div>
+    <input class="btn btn-primary" type="button" value="Use current location" id="location_finder">
+
+
 
     <div class="b-example-divider"></div>
 
@@ -66,6 +76,7 @@
 
 <!-- Optional JavaScript -->
 <!-- Bootstrap Bundle with Popper -->
+<script src="/javascripts/location_puller.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
