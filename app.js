@@ -2,8 +2,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const axios = require('axios').default;
-require('dotenv').config()
 const app = express();
 
 // view engine setup
@@ -17,57 +15,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
 
 const router = express.Router();
+// Import routes
+const database_handler = require('./public/handlers/database_handler')
+const phone_handler = require('./public/handlers/phone_handler')
+const weather_handler = require('./public/handlers/weather_handler')
+const index = require('./public/routes/index')
+const sql = require('./public/routes/sql')
+const weather = require('./public/routes/weather')
+const phone_lookup = require('./public/routes/phone_logger')
 
-let google_key = process.env.GOOGLE_MAPS
-let weather_key = process.env.OPENWEATHER_API
+app.use('/', index);
 
-console.log(weather_key)
-app.use('/', router);
+app.use('/', sql);
 
-router.get("/", function (req, res) {
-  res.render(__dirname + "/views/index.ejs");
+app.use('/', phone_lookup);
 
-});
-// TODO: Implement the Database solution. Should be SQL/SQLite. (Maybe MongoDB?)
-router.get("/sql", function (req, res) {
-    res.render(__dirname + "/views/sql.ejs");
+app.use('/', weather);
 
-});
+app.use('/', weather_handler);
 
-// TODO: Implement API request for pulling call logs from SW API.
-//  Ideally I'd want to pull the following data: Price, Status, Callee, Called, Date & Time
-
-router.get("/phone_logger", function (req, res) {
-    res.render(__dirname + "/views/phone_logger.ejs");
-
-});
-// TODO: Implement API Request for weather data. Start with US and expand to global countries eventually.
-router.get("/weather_lookup", function (req, res) {
-    res.render(__dirname + "/views/weather_lookup.ejs");
-
-});
-router.post("/weather_handle", function (req, res) {
-    const lat = req.body.latitude;
-    const lon = req.body.longitude;
-    console.log(lat)
-    console.log(lon)
-    /* if (lat != null) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}`;
-
-        axios.get(url)
-            .then(response => {
-                // Handle the API response data here
-                console.log(response.data);
-                res.render((__dirname + "/views/returned_weather"))
-            })
-            .catch(error => {
-                // Handle any errors that occurred during the API call
-                console.error(error);
-      });
-    }     */
-});
 // TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
 // Catch-all route for handling 404 errors
 app.use((req, res, next) => {

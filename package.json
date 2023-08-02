@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.35",
     "axios": "^1.4.0",
