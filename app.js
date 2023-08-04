@@ -15,10 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('views', path.join(__dirname, 'views'));
 
 const router = express.Router();
+
 // Import routes
+const geocoding_handler = require('./public/handlers/geocoding_handler')
 const database_handler = require('./public/handlers/database_handler')
 const phone_handler = require('./public/handlers/phone_handler')
 const weather_handler = require('./public/handlers/weather_handler')
@@ -37,10 +38,18 @@ app.use('/', weather);
 
 app.use('/', weather_handler);
 
+app.use('/', phone_handler);
+
+app.use('/', database_handler);
+
+app.use('/', geocoding_handler);
+
+
+
 // TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
 // Catch-all route for handling 404 errors
 app.use((req, res, next) => {
-    res.status(404).render(__dirname + "/views/error.ejs", {
+    res.status(404).render("error.ejs", {
         error_status: '404',
         error_res: "You've gotten lost! This page does not exist."
     });
@@ -49,7 +58,7 @@ app.use((req, res, next) => {
 // Error handling middleware for handling 500 errors
 app.use((err, req, res, next) => {
     console.error(err); // Log the error for debugging purposes
-    res.status(500).render(__dirname + "/views/error.ejs", {
+    res.status(500).render("error.ejs", {
         error_status: '500',
         error_res: "Something went wrong. Please try again later."
     });
