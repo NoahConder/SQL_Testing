@@ -59,6 +59,10 @@
     <input class="btn btn-primary" type="button" value="Use current location" id="location_finder">
     <div id="autocomplete_results"></div> <!-- Display autocomplete results here -->
 
+    <form id="weatherForm" method="post" action="/weather_handle" style="display: none;">
+        <input type="hidden" id="latitude" name="latitude" value="">
+        <input type="hidden" id="longitude" name="longitude" value="">
+    </form>
 
 
 
