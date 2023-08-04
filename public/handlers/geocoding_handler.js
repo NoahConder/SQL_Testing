@@ -6,7 +6,7 @@ const router = express.Router();
 require('dotenv').config()
 const weather_key = process.env.OPENWEATHER_API
 
-router.get('/weather', (req, res) => {
+router.get('/autocomplete', (req, res) => {
     const query = req.query.query; // Get the location query from the request URL parameter
 
     const apiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${weather_key}`;
@@ -17,13 +17,9 @@ router.get('/weather', (req, res) => {
             res.json(data); // Send the weather data back to the client as a JSON response
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.log(error)
             res.status(500).json({ error: 'An error occurred while fetching weather data.' });
         });
 });
-
-module.exports = router;
-
-
 
 module.exports = router;

@@ -1,5 +1,5 @@
 function fetchWeatherData(query) {
-    fetch(`/weather?query=${query}`)
+    fetch(`/autocomplete?query=${query}`)
         .then((response) => response.json())
         .then((data) => {
             const resultsDiv = document.getElementById('autocomplete_results');
@@ -7,6 +7,7 @@ function fetchWeatherData(query) {
 
             // Create and append the weather data list items
             data.forEach((item) => {
+                console.log(item)
                 const cityName = item.name;
                 const stateCode = item.state;
                 const countryCode = item.country;

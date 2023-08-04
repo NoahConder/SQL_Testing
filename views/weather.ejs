@@ -84,55 +84,6 @@
 <script src="/javascripts/autocomplete.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous" defer></script>
-
-<script>
-    // Function to fetch weather data and display it
-    function fetchWeatherData(query) {
-        const apiKey = 'f1cabbb0e1f9b185fd3b70cd8240f3b0';
-        const apiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`;
-
-        fetch(apiUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                const resultsDiv = document.getElementById('autocomplete_results');
-                resultsDiv.innerHTML = '';
-
-                // Create and append the weather data list items
-                data.forEach((item) => {
-                    const cityName = item.name;
-                    const stateCode = item.state;
-                    const countryCode = item.country;
-                    const listItem = document.createElement('div');
-                    listItem.textContent = `${cityName}, ${stateCode}, ${countryCode}`;
-                    listItem.classList.add('autocomplete-item');
-                    listItem.addEventListener('click', () => {
-                        document.getElementById('location_input_box').value = listItem.textContent;
-                        resultsDiv.innerHTML = ''; // Clear the results
-                    });
-                    resultsDiv.appendChild(listItem);
-                });
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                // Handle errors here
-            });
-    }
-
-    // Function to handle input in the location input box
-    function handleInput(event) {
-        const inputText = event.target.value;
-        if (inputText.length >= 3) {
-            fetchWeatherData(inputText);
-        } else {
-            // Clear the autocomplete results if input is less than 3 characters
-            document.getElementById('autocomplete_results').innerHTML = '';
-        }
-    }
-
-    // Attach event listener to the location input box
-    document.getElementById('location_input_box').addEventListener('input', handleInput);
-</script>
-
 </body>
 </html>
 
