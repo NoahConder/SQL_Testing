@@ -5,8 +5,13 @@ function fetchWeatherData(query) {
             const resultsDiv = document.getElementById('autocomplete_results');
             resultsDiv.innerHTML = '';
 
+            // Filter out items with undefined values for name, state, or country
+            const filteredData = data.filter(item => {
+                return item.name && item.state && item.country;
+            });
+
             // Create and append the weather data list items
-            data.forEach((item) => {
+            filteredData.forEach((item) => {
                 console.log(item)
                 const cityName = item.name;
                 const stateCode = item.state;
@@ -26,7 +31,6 @@ function fetchWeatherData(query) {
             // Handle errors here
         });
 }
-
 // Function to handle input in the location input box
 function handleInput(event) {
     const inputText = event.target.value;
