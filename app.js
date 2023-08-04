@@ -1,16 +1,15 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-
+// TODO: Possibly implement a registration system? This system would save SignalWire API information
+//  and OpenWeather API key rather than manually entering it each time when testing.
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -19,17 +18,52 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const router = express.Router();
 
-app.use('/', router);
+// Import routes
+const geocoding_handler = require('./public/handlers/geocoding_handler')
+const database_handler = require('./public/handlers/database_handler')
+const phone_handler = require('./public/handlers/phone_handler')
+const weather_handler = require('./public/handlers/weather_handler')
+const index = require('./public/routes/index')
+const sql = require('./public/routes/sql')
+const weather = require('./public/routes/weather')
+const phone_lookup = require('./public/routes/phone_logger')
 
-router.get("/", function (req, res) {
-  res.render(__dirname + "/views/index.ejs");
+app.use('/', index);
 
-});
+app.use('/', sql);
 
+app.use('/', phone_lookup);
+
+app.use('/', weather);
+
+app.use('/', weather_handler);
+
+app.use('/', phone_handler);
+
+app.use('/', database_handler);
+
+app.use('/', geocoding_handler);
+
+
+
+// TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
+// Catch-all route for handling 404 errors
 app.use((req, res, next) => {
-    res.status(404).render(__dirname + "/views/error.ejs",{ error_status: '404', error_res: "You've got lost! This page does not exist." });
+    res.status(404).render("error.ejs", {
+        error_status: '404',
+        error_res: "You've gotten lost! This page does not exist."
+    });
 });
 
-app.listen(8080);
+// Error handling middleware for handling 500 errors
+app.use((err, req, res, next) => {
+    console.error(err); // Log the error for debugging purposes
+    res.status(500).render("error.ejs", {
+        error_status: '500',
+        error_res: "Something went wrong. Please try again later."
+    });
+});
 
-console.log("http://localhost:8080");
+app.listen(8080, host="0.0.0.0");
+
+console.log("http://127.0.0.1:8080");
