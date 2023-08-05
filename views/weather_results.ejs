@@ -48,31 +48,15 @@
 
 <!-- Main Content -->
 <main class="container">
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="col-md-4">
-            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                <h2>SQL Database Viewer</h2>
-                <p>Will you do the same for me? It's time to face the music I'm no longer your muse. Heard it's beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix inside of me. Heaven is jealous of our love, angels are crying from up above. Yeah, you take me to utopia.</p>
-                <p><a class="btn btn-secondary" href="/sql" role="button">View details &raquo;</a></p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                <h2>Phone Call Logger</h2>
-                <p>Standing on the frontline when the bombs start to fall. Heaven is jealous of our love, angels are crying from up above. Can't replace you with a million rings. Boy, when you're with me I'll give you a taste. There’s no going back. Before you met me I was alright but things were kinda heavy. Heavy is the head that wears the crown.</p>
-                <p><a class="btn btn-secondary" href="/phone_logger" role="button">View details &raquo;</a></p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-
-                <h2>Weather Lookup Tool</h2>
-                <p>Get the weather from any destination in the US and pull a variety of weather data such as the current temperature, feels like temperature, conditions, and more. Save it to the database for later viewing and even download it via CSV or text it to any US-based number!</p>
-                <p><a class="btn btn-secondary" href="/weather" role="button">View details &raquo;</a></p>
-            </div>
-        </div>
-    </div>
+    <body>
+    <h1>Weather Information</h1>
+    <p>Temperature: <%= weatherData.temp %>°</p>
+    <p>Feels Like: <%= weatherData.feels_like %>°</p>
+    <p>Location: <%= weatherData.location_name %></p>
+    <p>Humidity: <%= weatherData.humidity %>%</p>
+    <p>Conditions: <%= weatherData.conditions %></p>
+    <p>Detailed Conditions: <%= weatherData.detailed_conditions %></p>
+    </body>
     <div class="b-example-divider"></div>
 
     <div class="container">

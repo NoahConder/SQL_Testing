@@ -4,90 +4,94 @@ const axios = require('axios').default;
 const router = express.Router();
 require('dotenv').config()
 const weather_key = process.env.OPENWEATHER_API
+const google_key = process.env.GOOGLE_API
 
+router.post("/weather_handle", async (req, res) => {
+    const lat = req.body.latitude;
+    const lon = req.body.longitude;
+    const form_box = req.body.location_input_box;
 
-router.post("/weather_handle", function (req, res) {
-    let lat = req.body.latitude;
-    let lon = req.body.longitude;
-    console.log(lat)
-    console.log(lon)
-    const form_box = req.body.location_input_box
-    console.log(form_box)
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}&units=imperial`;
+    const handleError = () => res.render("error.ejs");
 
-    if (lat != null)
-        axios.get(url)
-            .then(response => {
-                console.log(response.data);
-                // Weather Data Variables
-                let temp = Math.round(response.data.main.temp)
-                let feels_like = Math.round(response.data.main.feels_like)
-                let location_name = response.data.name
-                let humidity = response.data.main.humidity
-                let conditions = response.data.weather[0].main
-                let detailed_conditions = response.data.weather[0].description
-                detailed_conditions = detailed_conditions.charAt(0).toUpperCase() + detailed_conditions.slice(1);
+    if (lat) {
+        try {
+            const response = await fetch_weather_data(lat, lon);
+            const forecast = await fetch_weather_data_forecast(lat, lon);
+            console.log(forecast.data)
+            const weatherData = extract_weather_data(response.data, forecast);
+            res.render("weather_results.ejs", { weatherData });
+        } catch (error) {
+            handleError();
+            console.error(error);
+        }
+    } else if (form_box) {
+        const postal_zip_code_regex = /^[A-Za-z0-9\s-]+$/;
+        let lat, lon;
 
-                console.log(temp + '°')
-                console.log(feels_like + '°')
-                console.log(location_name)
-                console.log(humidity)
-                console.log(conditions)
-                console.log(detailed_conditions)
+        if (postal_zip_code_regex.test(form_box)) {
+            try {
+                const response = await fetch_geocoding_zipcode(form_box);
+                lat = response.data.results[0].geometry.location.lat;
+                lon = response.data.results[0].geometry.location.lng;
+            } catch (error) {
+                handleError();
+                console.log(error);
+            }
+        } else {
+            try {
+                const response = await fetch_geocoding(form_box);
+                lat = response.data[0].lat;
+                lon = response.data[0].lon;
+            } catch (error) {
+                handleError();
+                console.log(error);
+            }
+        }
 
-                return res.render("weather_results.ejs");
-
-            })
-            .catch(error => {
-                // Handle any errors that occurred during the API call
-                res.render("error.ejs");
-                console.error(error);
-
-            });
-
-    else if (form_box != null) {
-        const apiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${form_box}&limit=5&appid=${weather_key}`;
-        axios.get(apiUrl)
-            .then((response) => {
-                console.log(response.data[0].lon)
-                console.log(response.data[0].lat)
-                let lat = response.data[0].lat;
-                let lon = response.data[0].lon;
-                let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}&units=imperial`;
-                axios.get(url)
-                    .then(response => {
-                        console.log(response.data);
-                        // Weather Data Variables
-                        let temp = Math.round(response.data.main.temp)
-                        let feels_like = Math.round(response.data.main.feels_like)
-                        let location_name = response.data.name
-                        let humidity = response.data.main.humidity
-                        let conditions = response.data.weather[0].main
-                        let detailed_conditions = response.data.weather[0].description
-                        detailed_conditions = detailed_conditions.charAt(0).toUpperCase() + detailed_conditions.slice(1);
-
-                        console.log(temp + '°')
-                        console.log(feels_like + '°')
-                        console.log(location_name)
-                        console.log(humidity)
-                        console.log(conditions)
-                        console.log(detailed_conditions)
-
-                        return res.render("weather_results.ejs");
-
-                    })
-                    .catch(error => {
-                        // Handle any errors that occurred during the API call
-                        res.render("error.ejs");
-                        console.error(error);
-
-                    });
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+        try {
+            const response = await fetch_weather_data(lat, lon);
+            const weatherData = extract_weather_data(response.data);
+            res.render("weather_results.ejs", { weatherData });
+        } catch (error) {
+            handleError();
+            console.error(error);
+        }
     }
 });
 
+const extract_weather_data = (data, forecast) => {
+    return {
+        temp: Math.round(data.main.temp),
+        feels_like: Math.round(data.main.feels_like),
+        location_name: data.name,
+        humidity: data.main.humidity,
+        conditions: data.weather[0].main,
+        detailed_conditions: data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1),
+    };
+};
+
+
+
+
+
+const fetch_weather_data_forecast = (lat, lon) => {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weather_key}`;
+    return axios.get(url)
+}
+
+const fetch_geocoding = (form_box) => {
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${form_box}&limit=5&appid=${weather_key}`;
+    return axios.get(url)
+}
+
+const fetch_geocoding_zipcode = (form_box) => {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${form_box}&key=${google_key}`;
+    return axios.get(url)
+}
+
+const fetch_weather_data = (lat, lon) => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weather_key}&units=imperial`;
+    return axios.get(url);
+};
 
 module.exports = router;
