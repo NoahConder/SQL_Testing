@@ -6,71 +6,60 @@ require('dotenv').config()
 const weather_key = process.env.OPENWEATHER_API
 const google_key = process.env.GOOGLE_API
 
-router.post("/weather_handle", function (req, res) {
-    let lat = req.body.latitude;
-    let lon = req.body.longitude;
-    console.log(lat)
-    console.log(lon)
-    const form_box = req.body.location_input_box
-    console.log(form_box)
+router.post("/weather_handle", async (req, res) => {
+    const lat = req.body.latitude;
+    const lon = req.body.longitude;
+    const form_box = req.body.location_input_box;
 
-    if (lat != null) {
-        fetch_weather_data(lat, lon)
-            .then((response) => {
-                const weatherData = extract_weather_data(response.data);
-                res.render("weather_results.ejs", { weatherData });
-            })
-            .catch((error) => {
-                res.render("error.ejs");
-                console.error(error);
-            });
-    } else if (form_box != null) {
-        // Check if a zip code was entered
+    const handleError = () => res.render("error.ejs");
+
+    if (lat) {
+        try {
+            const response = await fetch_weather_data(lat, lon);
+            const forecast = await fetch_weather_data_forecast(lat, lon);
+            console.log(forecast.data)
+            const weatherData = extract_weather_data(response.data, forecast);
+            res.render("weather_results.ejs", { weatherData });
+        } catch (error) {
+            handleError();
+            console.error(error);
+        }
+    } else if (form_box) {
         const postal_zip_code_regex = /^[A-Za-z0-9\s-]+$/;
+        let lat, lon;
+
         if (postal_zip_code_regex.test(form_box)) {
-            fetch_geocoding_zipcode(form_box)
-                .then((response) => {
-                    lat = response.data.results[0].geometry.location.lat;
-                    lon = response.data.results[0].geometry.location.lng;
-                    fetch_weather_data(lat, lon)
-                        .then((response) => {
-                            const weatherData = extract_weather_data(response.data);
-                            res.render("weather_results.ejs", { weatherData });
-                        })
-                        .catch((error) => {
-                            res.render("error.ejs");
-                            console.error(error);
-                        });
-                })
-                .catch((error) => {
-                    res.render("error.ejs");
-                    console.log(error);
-                });
+            try {
+                const response = await fetch_geocoding_zipcode(form_box);
+                lat = response.data.results[0].geometry.location.lat;
+                lon = response.data.results[0].geometry.location.lng;
+            } catch (error) {
+                handleError();
+                console.log(error);
+            }
         } else {
-            // If it's not a zip code, use the geocoding API
-            fetch_geocoding(form_box)
-                .then((response) => {
-                    lat = response.data[0].lat;
-                    lon = response.data[0].lon;
-                    fetch_weather_data(lat, lon)
-                        .then((response) => {
-                            const weatherData = extract_weather_data(response.data);
-                            res.render("weather_results.ejs", { weatherData });
-                        })
-                        .catch((error) => {
-                            res.render("error.ejs");
-                            console.error(error);
-                        });
-                })
-                .catch((error) => {
-                    res.render("error.ejs");
-                    console.log(error);
-                });
+            try {
+                const response = await fetch_geocoding(form_box);
+                lat = response.data[0].lat;
+                lon = response.data[0].lon;
+            } catch (error) {
+                handleError();
+                console.log(error);
+            }
+        }
+
+        try {
+            const response = await fetch_weather_data(lat, lon);
+            const weatherData = extract_weather_data(response.data);
+            res.render("weather_results.ejs", { weatherData });
+        } catch (error) {
+            handleError();
+            console.error(error);
         }
     }
 });
 
-const extract_weather_data = (data) => {
+const extract_weather_data = (data, forecast) => {
     return {
         temp: Math.round(data.main.temp),
         feels_like: Math.round(data.main.feels_like),
@@ -80,6 +69,15 @@ const extract_weather_data = (data) => {
         detailed_conditions: data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1),
     };
 };
+
+
+
+
+
+const fetch_weather_data_forecast = (lat, lon) => {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weather_key}`;
+    return axios.get(url)
+}
 
 const fetch_geocoding = (form_box) => {
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${form_box}&limit=5&appid=${weather_key}`;
