@@ -10,5 +10,7 @@ SIGNALWIRE_SPACE=SIGNALWIRE SPACE NAME GOES HERE
 ```
 Task list of actions needed to be completed in no specific order.
 - [x] Implement Weather API fetcher.
-- [ ] Take returned variables and beautify the results. e.g rain would be "It is currently raining"
+- [x] Take returned variables and beautify the results.
+- [ ] Begin building the database
+- [ ] Begin building the phone call logger
 - [ ] more to come
