@@ -6,6 +6,10 @@ require('dotenv').config()
 const weather_key = process.env.OPENWEATHER_API
 const google_key = process.env.GOOGLE_API
 
+// TODO: 1. Implement saving as CSV.
+// TODO 2. Implement sending weather data as a SMS.
+// TODO 3. Implement saving weather data to the database.
+
 router.post("/weather_handle", async (req, res) => {
     const lat = req.body.latitude;
     const lon = req.body.longitude;
@@ -16,9 +20,7 @@ router.post("/weather_handle", async (req, res) => {
     if (lat) {
         try {
             const response = await fetch_weather_data(lat, lon);
-            const forecast = await fetch_weather_data_forecast(lat, lon);
-            console.log(forecast.data)
-            const weatherData = extract_weather_data(response.data, forecast);
+            const weatherData = extract_weather_data(response.data);
             res.render("weather_results.ejs", { weatherData });
         } catch (error) {
             handleError();
@@ -59,7 +61,7 @@ router.post("/weather_handle", async (req, res) => {
     }
 });
 
-const extract_weather_data = (data, forecast) => {
+const extract_weather_data = (data) => {
     return {
         temp: Math.round(data.main.temp),
         feels_like: Math.round(data.main.feels_like),
@@ -70,14 +72,6 @@ const extract_weather_data = (data, forecast) => {
     };
 };
 
-
-
-
-
-const fetch_weather_data_forecast = (lat, lon) => {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weather_key}`;
-    return axios.get(url)
-}
 
 const fetch_geocoding = (form_box) => {
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${form_box}&limit=5&appid=${weather_key}`;
