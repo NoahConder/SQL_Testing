@@ -35,7 +35,7 @@
 
     <div class="h-300 p-1 text-center">
         <h1 class="display-1 transparent-bg"><%= weatherData.location_name %></h1>
-        <h3 class="display-6"><%= weatherData.feels_like %>°</h3>
+        <h3 class="display-6"><%= weatherData.feels_like %>°F</h3>
         <p id="bing_bong">Information accurate as of: </p>
     </div>
 
@@ -61,7 +61,7 @@
             <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
                 <h1><i class="bi bi-thermometer"></i></h1>
                 <h5 class="text-dark fw-bold mb-3">Feels Like</h5>
-                <h4 class="fw-normal text-primary mb-0"><%= weatherData.feels_like %>°</h4>
+                <h4 class="fw-normal text-primary mb-0"><%= weatherData.feels_like %>°F</h4>
                 <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
             </div>
 
@@ -87,26 +87,7 @@
         </div>
         </div>
     </section>
-
-
-
-
-
-
-
     </body>
-
-
-
-
-
-
-
-
-
-
-
-
 
     <div class="b-example-divider"></div>
 
@@ -135,7 +116,6 @@
     const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
     const formattedTime = currentDate.toLocaleString('en-US', options);
 
-    console.log(formattedTime);
     document.getElementById("bing_bong").textContent = `Information accurate as of: ${formattedTime}`
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous" defer></script>
