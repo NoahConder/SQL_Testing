@@ -3,13 +3,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const app = express();
+const db = require("./public/javascripts/database")
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// TODO: Possibly implement a registration system? This system would save SignalWire API information
-//  and OpenWeather API key rather than manually entering it each time when testing.
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -20,7 +19,6 @@ const router = express.Router();
 
 // Import routes
 const geocoding_handler = require('./public/handlers/geocoding_handler')
-const database_handler = require('./public/handlers/database_handler')
 const phone_handler = require('./public/handlers/phone_handler')
 const weather_handler = require('./public/handlers/weather_handler')
 const index = require('./public/routes/index')
@@ -40,14 +38,9 @@ app.use('/', weather_handler);
 
 app.use('/', phone_handler);
 
-app.use('/', database_handler);
-
 app.use('/', geocoding_handler);
 
-
-
-// TODO: Add proper error handling. Currently only displays 404 errors. Should also return 500 errors if necessary.
-// Catch-all route for handling 404 errors
+// Route for handling 404 errors
 app.use((req, res, next) => {
     res.status(404).render("error.ejs", {
         error_status: '404',
@@ -55,7 +48,7 @@ app.use((req, res, next) => {
     });
 });
 
-// Error handling middleware for handling 500 errors
+// Route for handling 500 errors
 app.use((err, req, res, next) => {
     console.error(err); // Log the error for debugging purposes
     res.status(500).render("error.ejs", {
