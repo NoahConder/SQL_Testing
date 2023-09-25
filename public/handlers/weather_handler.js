@@ -4,7 +4,7 @@ const axios = require('axios').default;
 const router = express.Router();
 require('dotenv').config()
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./data.db');
+
 
 
 const weather_key = process.env.OPENWEATHER_API
@@ -12,7 +12,10 @@ const google_key = process.env.GOOGLE_API
 
 // TODO: 1. Implement saving as CSV.
 // TODO 2. Implement sending weather data as a SMS.
-// TODO 3. Implement saving weather data to the database.
+// TODO 3. Implement saving weather data to the database. DONE
+
+
+
 
 router.post("/weather_handle", async (req, res) => {
     const lat = req.body.latitude;
@@ -26,11 +29,13 @@ router.post("/weather_handle", async (req, res) => {
             const response = await fetch_weather_data(lat, lon);
             const weatherData = extract_weather_data(response.data);
             res.render("weather_results.ejs", { weatherData });
+            const db = openDatabase(); // Open the database
             db.run('INSERT INTO weather (location, temperature, feels_like, humidity, conditions, detailed_conditions) VALUES (?, ?, ?, ?, ?, ?)', [weatherData.location_name, weatherData.temp, weatherData.feels_like, weatherData.humidity, weatherData.conditions, weatherData.detailed_conditions], function(err) {
                 if (err) {
                     console.error(err.message);
                 } else {
                     console.log(`A new row has been inserted with ID ${this.lastID}`);
+                    closeDatabase(db); // Close the database when done
                 }
             });
         } catch (error) {
@@ -65,11 +70,15 @@ router.post("/weather_handle", async (req, res) => {
             const response = await fetch_weather_data(lat, lon);
             const weatherData = extract_weather_data(response.data);
             res.render("weather_results.ejs", { weatherData });
+            const db = openDatabase(); // Open the database
+
             db.run('INSERT INTO weather (location, temperature, feels_like, humidity, conditions, detailed_conditions) VALUES (?, ?, ?, ?, ?, ?)', [weatherData.location_name, weatherData.temp, weatherData.feels_like, weatherData.humidity, weatherData.conditions, weatherData.detailed_conditions], function(err) {
                 if (err) {
                     console.error(err.message);
                 } else {
                     console.log(`A new row has been inserted with ID ${this.lastID}`);
+                    closeDatabase(db); // Close the database when done
+
                 }
             });
         } catch (error) {
@@ -90,7 +99,18 @@ const extract_weather_data = (data) => {
     };
 };
 
-
+function openDatabase() {
+    return new sqlite3.Database('./public/db/data.db');
+}
+function closeDatabase(db) {
+    db.close((err) => {
+        if (err) {
+            console.error('Error closing the database:', err.message);
+        } else {
+            console.log('Database closed.');
+        }
+    });
+}
 const fetch_geocoding = (form_box) => {
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${form_box}&limit=5&appid=${weather_key}`;
     return axios.get(url)

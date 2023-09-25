@@ -19,7 +19,6 @@ const router = express.Router();
 
 // Import routes
 const geocoding_handler = require('./public/handlers/geocoding_handler')
-const database_handler = require('./public/handlers/database_handler')
 const phone_handler = require('./public/handlers/phone_handler')
 const weather_handler = require('./public/handlers/weather_handler')
 const index = require('./public/routes/index')
@@ -38,8 +37,6 @@ app.use('/', weather);
 app.use('/', weather_handler);
 
 app.use('/', phone_handler);
-
-app.use('/', database_handler);
 
 app.use('/', geocoding_handler);
 

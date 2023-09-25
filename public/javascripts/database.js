@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./data.db');
+const db = new sqlite3.Database('./public/db/data.db');
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS weather (
@@ -13,3 +13,4 @@ db.serialize(() => {
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
 });
+db.close()

@@ -1,2 +1,2 @@
 /.env
-/data.db
+/public/db/data.db
