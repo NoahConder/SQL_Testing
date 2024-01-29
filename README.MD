@@ -12,6 +12,8 @@ Task list of actions needed to be completed in no specific order.
 - [x] Implement Weather API fetcher.
 - [x] Take returned variables and beautify the results.
 - [x] Implement the database
-- [ ] implement database viewer
+- [x] implement database viewer
 - [ ] Begin building the phone call logger
+- [ ] Refine overall look of the database viewer
+- [ ] Further improve routes and error handling
 - [ ] more to come

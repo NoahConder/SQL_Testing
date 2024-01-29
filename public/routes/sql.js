@@ -25,7 +25,7 @@ router.get("/sql", function (req, res) {
         const totalPages = Math.ceil(totalCount / itemsPerPage);
 
         // Define the SQL query with LIMIT and OFFSET
-        const query = `SELECT * FROM weather LIMIT ${itemsPerPage} OFFSET ${offset}`;
+        const query = `SELECT * FROM weather ORDER BY date DESC LIMIT ${itemsPerPage} OFFSET ${offset}`;
 
         db.all(query, (err, rows) => {
             if (err) {
