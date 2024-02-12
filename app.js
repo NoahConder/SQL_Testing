@@ -10,7 +10,8 @@ const weatherHandler = require('./public/handlers/weather_handler');
 const index = require('./public/routes/index');
 const sql = require('./public/routes/sql');
 const weather = require('./public/routes/weather');
-const calls = require('./public/routes/calls');
+const verto = require('./public/routes/sip_call');
+const sip = require('./public/routes/verto_call');
 
 const app = express();
 
@@ -27,7 +28,8 @@ function configureExpress() {
 
 function installRoutes() {
     app.use('/', index);
-    app.use('/', calls);
+    app.use('/', verto);
+    app.use('/', sip);
     app.use('/', sql);
     app.use('/', weather);
     app.use('/', weatherHandler);
