@@ -7,9 +7,25 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
     .jumbotron {
       margin-bottom: 20px; /* Add some margin at the bottom */
     }
+    .btn-secondary {
+      background-color: #476f95;
+      border-color: #476f95;
+    }
+
+    .btn-secondary:hover {
+      background-color: #a3b7ca;
+      border-color: #a3b7ca;
+      color: #F0F8FF;
+    }
+
   </style>
 </head>
 <body>
@@ -27,7 +43,8 @@
         <div class="navbar-nav">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
           <a class="nav-link" href="/sql">SQL Database Viewer</a>
-          <a class="nav-link" href="/phone_logger">Phone Call Logger</a>
+          <a class="nav-link" href="/sip_call">SIP Dialer</a>
+          <a class="nav-link" href="/verto_call">Verto Dialer</a>
           <a class="nav-link" href="/weather">Weather Lookup Tool</a>
         </div>
       </div>
@@ -39,7 +56,7 @@
 <div class="jumbotron jumbotron-fluid bg-body-tertiary">
 
   <div class="container text-center py-5">
-    <h1 class="display-4"><Introducti></Introducti>Tools & Extras</h1>
+    <h1 class="display-4">Tools & Extras</h1>
 
   </div>
 </div>
@@ -50,26 +67,28 @@
   <div class="row">
     <div class="col-md-4">
       <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-      <h2>SQL Database Viewer</h2>
-      <p>Quickly access all previous searched weather results. All data is stored in a SQL database and is sorted in pages of 10. Soon to support phone call logs!</p>
-      <p><a class="btn btn-secondary" href="/sql" role="button">View details &raquo;</a></p>
-    </div>
-    </div>
-    <div class="col-md-4">
-      <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-      <h2>Portable Phone Dialer</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim lobortis scelerisque fermentum dui faucibus in. Id leo in vitae turpis massa sed elementum. Dignissim convallis aenean et tortor at. Consectetur adipiscing elit pellentesque habitant. At lectus urna duis convallis convallis tellus id interdum. Hendrerit gravida rutrum quisque non tellus</p>
-      <p><a class="btn btn-secondary" href="/phone_logger" role="button">View details &raquo;</a></p>
-    </div>
+        <h2>SQL Database Viewer</h2>
+        <p>Quickly access all previous searched weather results. All data is stored in a SQL database and is sorted in pages of 10. Soon to support phone call logs!</p>
+        <p><a class="btn btn-secondary" href="/sql" role="button">View details &raquo;</a></p>
+      </div>
     </div>
     <div class="col-md-4">
       <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+        <h2>Portable Phone Dialer</h2>
+        <p>Dial out to any number in the world (Or at least try!) with either WebRTC or a softphone approach.</p>
+        <p>
+          <a class="btn btn-secondary mr-2" href="/verto_call" role="button">Verto Dialer</a>
+          <a class="btn btn-secondary" href="/sip_call" role="button">SIP Dialer</a>
+        </p>
+      </div>
+    </div>
 
-      <h2>Weather Lookup Tool</h2>
-      <p>Get the weather from any destination globally and pull a variety of weather data such as the current temperature, feels like temperature, conditions, and more. All saved to the database for later viewing. You can also download it via CSV or text it to any number!</p>
-      <p><a class="btn btn-secondary" href="/weather" role="button">View details &raquo;</a></p>
-    </div>
-    </div>
+    <div class="col-md-4">
+      <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+        <h2>Weather Lookup Tool</h2>
+        <p>Get the weather from any destination globally and pull a variety of weather data such as the current temperature, feels like temperature, conditions, and more. All saved to the database for later viewing. You can also download it via CSV or text it to any number!</p>
+        <p><a class="btn btn-secondary" href="/weather" role="button">View details &raquo;</a></p>
+      </div>
   </div>
   <div class="b-example-divider"></div>
 
